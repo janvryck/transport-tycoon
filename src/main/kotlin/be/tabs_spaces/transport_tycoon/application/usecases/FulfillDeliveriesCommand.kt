@@ -6,17 +6,13 @@ import be.tabs_spaces.transport_tycoon.application.domain.*
 import be.tabs_spaces.transport_tycoon.application.domain.Transporter.Companion.boat
 import be.tabs_spaces.transport_tycoon.application.domain.Transporter.Companion.truck
 
-class FulfillDeliveriesCommand : FulfillDeliveries {
+class FulfillDeliveriesCommand(packages: String) : FulfillDeliveries {
 
     private val routes = Routes()
+    private val transporters = Transporters(truck(), truck(), boat())
+    private val packages = Packages(packages)
 
-    override fun fulfill(input: String): Int {
-        val packages = input
-            .map { Location.valueOf(it.toString()) }
-            .map { location -> Package(location) }
-            .toList()
-        val transporters = Transporters(truck(), truck(), boat())
-
+    override fun fulfill(): Int {
         while (!packages.delivered()) {
             packages.markAsDeliveredAt()
 
@@ -34,17 +30,7 @@ class FulfillDeliveriesCommand : FulfillDeliveries {
                 }
             Clock.tick()
         }
-        return packages.maxOf { it.arrivesAt ?: -1 }
+        return packages.lastDelivery()
     }
 
-    private fun List<Package>.getAvailablePackageAt(
-        location: Location,
-    ) = filter { it.location == location }
-        .firstOrNull { it.arrivesAt?.let { it <= Clock.tick } ?: true }
-
-    private fun List<Package>.delivered() = all { it.arrived }
-
-    private fun List<Package>.markAsDeliveredAt() {
-            forEach { it.canArrive() }
-    }
 }

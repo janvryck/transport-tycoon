@@ -22,3 +22,23 @@ class Package(val destination: Location) {
         location = route.to
     }
 }
+
+class Packages(rawListing: String) {
+    val packages = rawListing
+        .map { Location.valueOf(it.toString()) }
+        .map { location -> Package(location) }
+        .toList()
+
+    fun getAvailablePackageAt(
+        location: Location,
+    ) = packages.filter { it.location == location }
+        .firstOrNull { it.arrivesAt?.let { it <= Clock.tick } ?: true }
+
+    fun delivered() = packages.all { it.arrived }
+
+    fun markAsDeliveredAt() {
+        packages.forEach { it.canArrive() }
+    }
+
+    fun lastDelivery() = packages.maxOf { it.arrivesAt ?: -1 }
+}

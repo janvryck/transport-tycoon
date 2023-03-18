@@ -29,9 +29,9 @@ class FulfillDeliveriesCommandTest {
     )
     @ParameterizedTest
     fun `Determines time to deliver all packages`(input: String, expected: String) {
-        val tycoon = FulfillDeliveriesCommand()
+        val fulfillDeliveries = FulfillDeliveriesCommand(input)
 
-        val result = tycoon.fulfill(input)
+        val result = fulfillDeliveries.fulfill()
 
         assertEquals(expected.toInt(), result)
     }
