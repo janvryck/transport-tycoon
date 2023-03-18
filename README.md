@@ -27,3 +27,10 @@ Write a program that takes a list of cargos from the command line and prints out
 |--------------|---------------|
 | AABABBAB     | 29            |
 | ABBBABAAABBB | 41            |
+
+### CLI
+
+Adapted the application to use `kotlinx-cli`. The application is not packages at the momen, preliminary tests can be run as:
+```shell
+./gradlew run --args="fulfill <packages>"
+```
