@@ -1,4 +1,6 @@
-package be.tabs_spaces.transport_tycoon
+package be.tabs_spaces.transport_tycoon.application.domain
+
+import be.tabs_spaces.transport_tycoon.Clock
 
 data class Transporter(
     var availableAt: Int = 0,

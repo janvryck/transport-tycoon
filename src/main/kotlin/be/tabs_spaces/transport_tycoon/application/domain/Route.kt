@@ -1,4 +1,4 @@
-package be.tabs_spaces.transport_tycoon
+package be.tabs_spaces.transport_tycoon.application.domain
 
 data class Route(
     val from: Location,

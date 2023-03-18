@@ -1,8 +1,12 @@
-package be.tabs_spaces.transport_tycoon
+package be.tabs_spaces.transport_tycoon.application.usecases
 
-class TransportTycoon {
+import be.tabs_spaces.transport_tycoon.Clock
+import be.tabs_spaces.transport_tycoon.application.api.FulfillDeliveries
+import be.tabs_spaces.transport_tycoon.application.domain.*
 
-    fun transport(input: String): Int {
+class TransportTycoon : FulfillDeliveries {
+
+    override fun fulfill(input: String): Int {
         val packages = input
             .map { Location.valueOf(it.toString()) }
             .map { location -> Package(location) }

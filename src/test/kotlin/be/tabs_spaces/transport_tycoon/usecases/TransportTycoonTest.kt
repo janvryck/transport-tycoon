@@ -1,4 +1,7 @@
+package be.tabs_spaces.transport_tycoon.usecases
+
 import be.tabs_spaces.transport_tycoon.*
+import be.tabs_spaces.transport_tycoon.application.usecases.TransportTycoon
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -28,7 +31,7 @@ class TransportTycoonTest {
     fun `Determines time to deliver all packages`(input: String, expected: String) {
         val tycoon = TransportTycoon()
 
-        val result = tycoon.transport(input)
+        val result = tycoon.fulfill(input)
 
         assertEquals(expected.toInt(), result)
     }

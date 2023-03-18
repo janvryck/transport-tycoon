@@ -1,4 +1,6 @@
-package be.tabs_spaces.transport_tycoon
+package be.tabs_spaces.transport_tycoon.application.domain
+
+import be.tabs_spaces.transport_tycoon.Clock
 
 class Package(val destination: Location) {
     var location: Location = Location.FACTORY
