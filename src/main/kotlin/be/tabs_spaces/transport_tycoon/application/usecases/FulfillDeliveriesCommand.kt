@@ -8,6 +8,8 @@ import be.tabs_spaces.transport_tycoon.application.domain.Transporter.Companion.
 
 class FulfillDeliveriesCommand : FulfillDeliveries {
 
+    private val routes = Routes()
+
     override fun fulfill(input: String): Int {
         val packages = input
             .map { Location.valueOf(it.toString()) }
@@ -45,6 +47,4 @@ class FulfillDeliveriesCommand : FulfillDeliveries {
     private fun List<Package>.markAsDeliveredAt() {
             forEach { it.canArrive() }
     }
-
-    private fun List<Route>.find(from: Location, to: Location) = find { it.from == from && it.finalDestination == to }
 }
