@@ -1,9 +1,15 @@
 import be.tabs_spaces.transport_tycoon.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import kotlin.test.assertEquals
 
 class TransportTycoonTest {
+
+    @BeforeEach
+    fun resetClock() {
+        Clock.reset()
+    }
 
     @CsvSource(
         value = [

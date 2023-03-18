@@ -9,7 +9,7 @@ data class Transporter(
         fun boat() = Transporter(pickupLocation = Location.PORT)
     }
 
-    fun onRoute(route: Route, tick: Int) {
-        availableAt = tick + 2 * route.duration
+    fun onRoute(route: Route) {
+        availableAt = Clock.tick + 2 * route.duration
     }
 }

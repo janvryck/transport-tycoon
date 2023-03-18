@@ -1,6 +1,6 @@
 package be.tabs_spaces.transport_tycoon
 
-class TransportTycoon() {
+class TransportTycoon {
 
     fun transport(input: String): Int {
         val packages = input
@@ -9,44 +9,40 @@ class TransportTycoon() {
             .toList()
         val transporters = listOf(Transporter.truck(), Transporter.truck(), Transporter.boat())
 
-        var tick = 0
         while (!packages.delivered()) {
-            packages.markAsDeliveredAt(tick)
+            packages.markAsDeliveredAt()
 
-            transporters.availableAt(tick)
+            transporters.availableAt()
                 .forEach { transporter ->
-                    val availablePackage = packages.getAvailablePackageAt(transporter.pickupLocation, tick)
+                    val availablePackage = packages.getAvailablePackageAt(transporter.pickupLocation)
 
                     availablePackage?.apply {
                         routes.find(from = location, to = destination)?.let { route ->
-                            this.onRoute(route, tick)
-                            transporter.onRoute(route, tick)
+                            this.onRoute(route)
+                            transporter.onRoute(route)
                         }
                     }
 
                 }
-            tick++
+            Clock.tick()
         }
         return packages.maxOf { it.arrivesAt ?: -1 }
     }
 
     private fun List<Package>.getAvailablePackageAt(
         location: Location,
-        tick: Int
     ) = filter { it.location == location }
-        .firstOrNull { it.arrivesAt?.let { it <= tick } ?: true }
+        .firstOrNull { it.arrivesAt?.let { it <= Clock.tick } ?: true }
 
     private fun List<Package>.delivered() = all { it.arrived }
 
-    private fun List<Package>.markAsDeliveredAt(tick: Int) {
-        filter { it.arrivesAt == tick }
-            .filter { it.location == it.destination }
-            .forEach {
-                it.arrived = true
+    private fun List<Package>.markAsDeliveredAt() {
+            forEach {
+                it.canArrive(Clock.tick)
             }
     }
 
-    private fun List<Transporter>.availableAt(tick: Int) = filter { it.availableAt <= tick }
+    private fun List<Transporter>.availableAt() = filter { it.availableAt <= Clock.tick }
 
     private fun List<Route>.find(from: Location, to: Location) = find { it.from == from && it.finalDestination == to }
 }
