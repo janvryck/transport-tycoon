@@ -7,6 +7,11 @@ data class Route(
     val finalDestination: Location = to
 )
 
+data class Assignment(
+    val cargo: Package,
+    val route: Route,
+)
+
 class Routes {
 
     private val routes = listOf(
@@ -15,6 +20,8 @@ class Routes {
         Route(Location.FACTORY, Location.B, 5)
     )
 
-    fun find(from: Location, to: Location) = routes.find { it.from == from && it.finalDestination == to }
+    fun find(from: Location, to: Location) = routes
+        .find { it.from == from && it.finalDestination == to }
+        ?: throw IllegalArgumentException("No path from $from to $to")
 
 }

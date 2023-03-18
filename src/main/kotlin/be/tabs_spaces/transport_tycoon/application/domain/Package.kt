@@ -11,7 +11,7 @@ class Package(val destination: Location) {
         private set
 
     fun canArrive() {
-        if(arrivesAt == Clock.tick && location == destination){
+        if (arrivesAt == Clock.tick && location == destination) {
             arrived = true
         }
     }
@@ -24,7 +24,7 @@ class Package(val destination: Location) {
 }
 
 class Packages(rawListing: String) {
-    val packages = rawListing
+    private val packages = rawListing
         .map { Location.valueOf(it.toString()) }
         .map { location -> Package(location) }
         .toList()
@@ -36,7 +36,7 @@ class Packages(rawListing: String) {
 
     fun delivered() = packages.all { it.arrived }
 
-    fun markAsDeliveredAt() {
+    fun markAsDelivered() {
         packages.forEach { it.canArrive() }
     }
 

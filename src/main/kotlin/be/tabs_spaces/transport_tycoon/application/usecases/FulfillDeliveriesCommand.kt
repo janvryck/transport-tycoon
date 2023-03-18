@@ -14,23 +14,23 @@ class FulfillDeliveriesCommand(packages: String) : FulfillDeliveries {
 
     override fun fulfill(): Int {
         while (!packages.delivered()) {
-            packages.markAsDeliveredAt()
-
-            transporters.availableAt()
+            packages.markAsDelivered()
+            transporters.available()
                 .forEach { transporter ->
-                    val availablePackage = packages.getAvailablePackageAt(transporter.pickupLocation)
-
-                    availablePackage?.apply {
-                        routes.find(from = location, to = destination)?.let { route ->
-                            this.onRoute(route)
-                            transporter.onRoute(route)
-                        }
-                    }
-
+                    findAssignment(transporter)
+                        ?.apply { transporter.assign(this) }
                 }
             Clock.tick()
         }
         return packages.lastDelivery()
     }
+
+    private fun findAssignment(
+        transporter: Transporter
+    ) = packages.getAvailablePackageAt(transporter.pickupLocation)
+        ?.let { cargo -> createAssignment(cargo) }
+
+    private fun createAssignment(cargo: Package) =
+        Assignment(cargo, routes.find(from = cargo.location, to = cargo.destination))
 
 }

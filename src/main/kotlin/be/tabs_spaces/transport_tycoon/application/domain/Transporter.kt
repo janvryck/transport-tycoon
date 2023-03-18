@@ -11,14 +11,19 @@ data class Transporter(
         fun boat() = Transporter(pickupLocation = Location.PORT)
     }
 
-    fun onRoute(route: Route) {
+    private fun onRoute(route: Route) {
         availableAt = Clock.tick + 2 * route.duration
+    }
+
+    fun assign(assignment: Assignment) {
+        onRoute(assignment.route)
+        assignment.cargo.onRoute(assignment.route)
     }
 }
 
 class Transporters(vararg transporters: Transporter) {
     private val transporters = transporters.toList()
 
-    fun availableAt() = transporters.filter { it.availableAt <= Clock.tick }
+    fun available() = transporters.filter { it.availableAt <= Clock.tick }
 
 }
