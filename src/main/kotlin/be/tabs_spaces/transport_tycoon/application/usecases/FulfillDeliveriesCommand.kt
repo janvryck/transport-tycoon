@@ -4,7 +4,7 @@ import be.tabs_spaces.transport_tycoon.Clock
 import be.tabs_spaces.transport_tycoon.application.api.FulfillDeliveries
 import be.tabs_spaces.transport_tycoon.application.domain.*
 
-class TransportTycoon : FulfillDeliveries {
+class FulfillDeliveriesCommand : FulfillDeliveries {
 
     override fun fulfill(input: String): Int {
         val packages = input

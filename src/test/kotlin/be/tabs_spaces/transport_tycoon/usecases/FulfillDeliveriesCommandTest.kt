@@ -1,13 +1,13 @@
 package be.tabs_spaces.transport_tycoon.usecases
 
 import be.tabs_spaces.transport_tycoon.*
-import be.tabs_spaces.transport_tycoon.application.usecases.TransportTycoon
+import be.tabs_spaces.transport_tycoon.application.usecases.FulfillDeliveriesCommand
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import kotlin.test.assertEquals
 
-class TransportTycoonTest {
+class FulfillDeliveriesCommandTest {
 
     @BeforeEach
     fun resetClock() {
@@ -29,7 +29,7 @@ class TransportTycoonTest {
     )
     @ParameterizedTest
     fun `Determines time to deliver all packages`(input: String, expected: String) {
-        val tycoon = TransportTycoon()
+        val tycoon = FulfillDeliveriesCommand()
 
         val result = tycoon.fulfill(input)
 
