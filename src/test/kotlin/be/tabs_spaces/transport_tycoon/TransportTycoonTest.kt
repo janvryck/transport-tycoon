@@ -15,11 +15,13 @@ class TransportTycoonTest {
             "BBBBB,25",
             "AB,5",
             "ABB,7",
-            "AA,13"
+            "AA,13",
+            "AABABBAB,29",
+            "ABBBABAAABBB,41"
         ]
     )
     @ParameterizedTest
-    fun `return the correct output`(input: String, expected: String) {
+    fun `Determines time to deliver all packages`(input: String, expected: String) {
         val result = transport(input)
 
         assertEquals(expected.toInt(), result)
@@ -33,7 +35,7 @@ class TransportTycoonTest {
         val transporters = listOf(truck(), truck(), boat())
 
         var tick = 0
-        while (!packages.delivered() && tick <= 25) {
+        while (!packages.delivered()) {
             packages
                 .filter { it.arrivesAt == tick }
                 .filter { it.location == it.destination }
@@ -58,10 +60,6 @@ class TransportTycoonTest {
                     }
 
                 }
-            println(tick)
-            println(packages)
-            println(transporters)
-            println("---")
             tick++
         }
         return packages.maxOf { it.arrivesAt ?: -1 }
