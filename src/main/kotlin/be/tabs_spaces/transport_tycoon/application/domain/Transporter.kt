@@ -15,3 +15,10 @@ data class Transporter(
         availableAt = Clock.tick + 2 * route.duration
     }
 }
+
+class Transporters(vararg transporters: Transporter) {
+    private val transporters = transporters.toList()
+
+    fun availableAt() = transporters.filter { it.availableAt <= Clock.tick }
+
+}

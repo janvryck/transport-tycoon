@@ -13,7 +13,7 @@ class FulfillDeliveriesCommand : FulfillDeliveries {
             .map { Location.valueOf(it.toString()) }
             .map { location -> Package(location) }
             .toList()
-        val transporters = listOf(truck(), truck(), boat())
+        val transporters = Transporters(truck(), truck(), boat())
 
         while (!packages.delivered()) {
             packages.markAsDeliveredAt()
@@ -45,8 +45,6 @@ class FulfillDeliveriesCommand : FulfillDeliveries {
     private fun List<Package>.markAsDeliveredAt() {
             forEach { it.canArrive() }
     }
-
-    private fun List<Transporter>.availableAt() = filter { it.availableAt <= Clock.tick }
 
     private fun List<Route>.find(from: Location, to: Location) = find { it.from == from && it.finalDestination == to }
 }
