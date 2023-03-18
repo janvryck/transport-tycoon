@@ -11,17 +11,3 @@ data class Assignment(
     val cargo: Package,
     val route: Route,
 )
-
-class Routes {
-
-    private val routes = listOf(
-        Route(Location.FACTORY, Location.PORT, 1, Location.A),
-        Route(Location.PORT, Location.A, 4),
-        Route(Location.FACTORY, Location.B, 5)
-    )
-
-    fun find(from: Location, to: Location) = routes
-        .find { it.from == from && it.finalDestination == to }
-        ?: throw IllegalArgumentException("No path from $from to $to")
-
-}

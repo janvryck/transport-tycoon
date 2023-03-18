@@ -2,12 +2,19 @@ package be.tabs_spaces.transport_tycoon.usecases
 
 import be.tabs_spaces.transport_tycoon.*
 import be.tabs_spaces.transport_tycoon.application.usecases.FulfillDeliveriesCommand
+import be.tabs_spaces.transport_tycoon.infrastructure.outbound.InMemoryRoutes
+import be.tabs_spaces.transport_tycoon.infrastructure.outbound.InMemoryTransporters
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import kotlin.test.assertEquals
 
 class FulfillDeliveriesCommandTest {
+
+    private val command = FulfillDeliveriesCommand(
+        InMemoryRoutes(),
+        InMemoryTransporters()
+    )
 
     @BeforeEach
     fun resetClock() {
@@ -29,9 +36,7 @@ class FulfillDeliveriesCommandTest {
     )
     @ParameterizedTest
     fun `Determines time to deliver all packages`(input: String, expected: String) {
-        val fulfillDeliveries = FulfillDeliveriesCommand(input)
-
-        val result = fulfillDeliveries.fulfill()
+        val result = command.fulfill(input)
 
         assertEquals(expected.toInt(), result)
     }

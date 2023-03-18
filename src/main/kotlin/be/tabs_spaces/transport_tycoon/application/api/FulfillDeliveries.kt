@@ -2,6 +2,6 @@ package be.tabs_spaces.transport_tycoon.application.api
 
 interface FulfillDeliveries {
 
-    fun fulfill(): Int
+    fun fulfill(rawPackages: String): Int
 
 }
