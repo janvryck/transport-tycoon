@@ -13,9 +13,9 @@ class TransportTycoonTest {
             "BB,5",
             "BBB,15",
             "BBBBB,25",
-//            "AB,5",
-//            "ABB,7",
-//            "AA,13"
+            "AB,5",
+            "ABB,7",
+            "AA,13"
         ]
     )
     @ParameterizedTest
@@ -26,15 +26,15 @@ class TransportTycoonTest {
     }
 
     private fun transport(input: String): Int {
-        val packets = input
+        val packages = input
             .map { Location.valueOf(it.toString()) }
-            .map { location -> Packet(location) }
+            .map { location -> Package(location) }
             .toList()
         val transporters = listOf(truck(), truck(), boat())
 
         var tick = 0
-        while (!packets.delivered() && tick <= 25) {
-            packets
+        while (!packages.delivered() && tick <= 25) {
+            packages
                 .filter { it.arrivesAt == tick }
                 .filter { it.location == it.destination }
                 .forEach {
@@ -44,50 +44,51 @@ class TransportTycoonTest {
             transporters
                 .filter { it.availableAt <= tick }
                 .forEach { transporter ->
-                    val availablePacket = packets
+                    val availablePackage = packages
                         .filter { it.location == transporter.pickupLocation }
                         .firstOrNull { it.arrivesAt?.let { it <= tick } ?: true }
 
-                    availablePacket?.apply {
-                        when (destination) {
-                            A -> {
-                                arrivesAt = tick + 1
-                                location = PORT
-                                transporter.availableAt = tick + 2 * 1
+                    availablePackage?.apply {
+                        routes.find { it.from == location && it.finalDestination == destination }
+                            ?.run {
+                                arrivesAt = tick + duration
+                                location = to
+                                transporter.availableAt = tick + 2 * duration
                             }
-
-                            B -> {
-                                arrivesAt = tick + 5
-                                location = destination
-                                transporter.availableAt = tick + 2 * 5
-                            }
-                            PORT -> {
-                                arrivesAt = tick + 4
-                                location = A
-                                transporter.availableAt = tick + 2 * 4
-                            }
-                            FACTORY -> {}
-                        }
                     }
 
                 }
             println(tick)
-            println(packets)
+            println(packages)
             println(transporters)
             println("---")
             tick++
         }
-        return packets.maxOf { it.arrivesAt ?: -1 }
+        return packages.maxOf { it.arrivesAt ?: -1 }
     }
 
-    private fun List<Packet>.delivered() = all { it.arrived }
+    private fun List<Package>.delivered() = all { it.arrived }
 
     enum class Location {
         A,
         B,
         PORT,
         FACTORY
+        ;
     }
+
+    val routes = listOf(
+        Route(FACTORY, PORT, 1, A),
+        Route(PORT, A, 4),
+        Route(FACTORY, B, 5)
+    )
+
+    data class Route(
+        val from: Location,
+        val to: Location,
+        val duration: Int,
+        val finalDestination: Location = to
+    )
 
     data class Transporter(
         var availableAt: Int = 0,
@@ -99,7 +100,7 @@ class TransportTycoonTest {
         }
     }
 
-    data class Packet(
+    data class Package(
         val destination: Location,
         var location: Location = FACTORY,
         var arrived: Boolean = false,
