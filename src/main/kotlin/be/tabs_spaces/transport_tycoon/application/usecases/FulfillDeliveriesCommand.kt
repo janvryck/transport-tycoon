@@ -14,9 +14,8 @@ class FulfillDeliveriesCommand(
     private val transporterRepository: TransporterRepository,
 ) : FulfillDeliveries {
 
-    override fun fulfill(rawPackages: String): Int {
+    override fun fulfill(packages: Packages): Int {
         val transporters = transporterRepository.findAll()
-        val packages = Packages(rawPackages)
 
         while (!packages.delivered()) {
             packages.markAsDelivered()

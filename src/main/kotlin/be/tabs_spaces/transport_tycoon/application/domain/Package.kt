@@ -2,7 +2,7 @@ package be.tabs_spaces.transport_tycoon.application.domain
 
 import be.tabs_spaces.transport_tycoon.Clock
 
-class Package(val destination: Location) {
+data class Package(val destination: Location) {
     var location: Location = Location.FACTORY
         private set
     var arrivesAt: Int = -1
@@ -23,11 +23,9 @@ class Package(val destination: Location) {
 
 }
 
-class Packages(rawListing: String) {
-    private val packages = rawListing
-        .map { Location.valueOf(it.toString()) }
-        .map { location -> Package(location) }
-        .toList()
+data class Packages(private val packages: List<Package>) {
+
+    constructor(vararg packages: Package): this(packages.toList())
 
     fun getAvailablePackageAt(
         location: Location,
