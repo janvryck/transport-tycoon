@@ -1,6 +1,6 @@
 package be.tabs_spaces.transport_tycoon
 
-class TransportTycoon {
+class TransportTycoon() {
 
     fun transport(input: String): Int {
         val packages = input
@@ -11,27 +11,17 @@ class TransportTycoon {
 
         var tick = 0
         while (!packages.delivered()) {
-            packages
-                .filter { it.arrivesAt == tick }
-                .filter { it.location == it.destination }
-                .forEach {
-                    it.arrived = true
-                }
+            packages.markAsDeliveredAt(tick)
 
-            transporters
-                .filter { it.availableAt <= tick }
+            transporters.availableAt(tick)
                 .forEach { transporter ->
-                    val availablePackage = packages
-                        .filter { it.location == transporter.pickupLocation }
-                        .firstOrNull { it.arrivesAt?.let { it <= tick } ?: true }
+                    val availablePackage = packages.getAvailablePackageAt(transporter.pickupLocation, tick)
 
                     availablePackage?.apply {
-                        routes.find { it.from == location && it.finalDestination == destination }
-                            ?.run {
-                                arrivesAt = tick + duration
-                                location = to
-                                transporter.availableAt = tick + 2 * duration
-                            }
+                        routes.find(from = location, to = destination)?.let { route ->
+                            this.onRoute(route, tick)
+                            transporter.onRoute(route, tick)
+                        }
                     }
 
                 }
@@ -40,5 +30,23 @@ class TransportTycoon {
         return packages.maxOf { it.arrivesAt ?: -1 }
     }
 
+    private fun List<Package>.getAvailablePackageAt(
+        location: Location,
+        tick: Int
+    ) = filter { it.location == location }
+        .firstOrNull { it.arrivesAt?.let { it <= tick } ?: true }
+
     private fun List<Package>.delivered() = all { it.arrived }
+
+    private fun List<Package>.markAsDeliveredAt(tick: Int) {
+        filter { it.arrivesAt == tick }
+            .filter { it.location == it.destination }
+            .forEach {
+                it.arrived = true
+            }
+    }
+
+    private fun List<Transporter>.availableAt(tick: Int) = filter { it.availableAt <= tick }
+
+    private fun List<Route>.find(from: Location, to: Location) = find { it.from == from && it.finalDestination == to }
 }

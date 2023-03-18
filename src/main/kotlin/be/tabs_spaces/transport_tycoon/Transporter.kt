@@ -8,4 +8,8 @@ data class Transporter(
         fun truck() = Transporter(pickupLocation = Location.FACTORY)
         fun boat() = Transporter(pickupLocation = Location.PORT)
     }
+
+    fun onRoute(route: Route, tick: Int) {
+        availableAt = tick + 2 * route.duration
+    }
 }
