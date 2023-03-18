@@ -10,8 +10,8 @@ class Package(val destination: Location) {
     var arrived: Boolean = false
         private set
 
-    fun canArrive(tick: Int) {
-        if(arrivesAt == tick && location == destination){
+    fun canArrive() {
+        if(arrivesAt == Clock.tick && location == destination){
             arrived = true
         }
 

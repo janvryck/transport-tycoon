@@ -3,6 +3,8 @@ package be.tabs_spaces.transport_tycoon.application.usecases
 import be.tabs_spaces.transport_tycoon.Clock
 import be.tabs_spaces.transport_tycoon.application.api.FulfillDeliveries
 import be.tabs_spaces.transport_tycoon.application.domain.*
+import be.tabs_spaces.transport_tycoon.application.domain.Transporter.Companion.boat
+import be.tabs_spaces.transport_tycoon.application.domain.Transporter.Companion.truck
 
 class FulfillDeliveriesCommand : FulfillDeliveries {
 
@@ -11,7 +13,7 @@ class FulfillDeliveriesCommand : FulfillDeliveries {
             .map { Location.valueOf(it.toString()) }
             .map { location -> Package(location) }
             .toList()
-        val transporters = listOf(Transporter.truck(), Transporter.truck(), Transporter.boat())
+        val transporters = listOf(truck(), truck(), boat())
 
         while (!packages.delivered()) {
             packages.markAsDeliveredAt()
@@ -41,9 +43,7 @@ class FulfillDeliveriesCommand : FulfillDeliveries {
     private fun List<Package>.delivered() = all { it.arrived }
 
     private fun List<Package>.markAsDeliveredAt() {
-            forEach {
-                it.canArrive(Clock.tick)
-            }
+            forEach { it.canArrive() }
     }
 
     private fun List<Transporter>.availableAt() = filter { it.availableAt <= Clock.tick }
